@@ -1,0 +1,115 @@
+{% extends 'app/base.html' %}
+{% block title%}Home {% endblock %}
+{% block maincontent %}
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Categories</span> </a>
+                        <ul class="collapse show nav flex-column " id="submenu1" data-bs-parent="#menu">
+                            {% for cat in categories%}
+                            <li class="w-100">
+                               <span class="d-none d-sm-inline">
+                                <a href="{% url 'catPosts' cat.cat_name %}" class="nav-link d-sm-inline px-0">{{cat.cat_name}}</a>
+                                {% if user in cat.subscribers.all %}
+                                    <a class="nav-link d-sm-inline text-danger" href="{% url 'unsubscribetocategory' cat.cat_name %}">unsubscribe</a>
+                                {% else %}
+                                    <a class="nav-link d-sm-inline text-danger" href="{% url 'subscribetocategory' cat.cat_name %}">subscribe</a>
+                                {% endif %}
+                            </span> 
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    
+                </ul>
+                <hr>
+            </div>
+        </div>
+        <div class="col py-3">
+            <div class="container pt-5 ps-5">
+                <div class="row">
+                    <div class="col-8 mx-auto my-3">
+                        <div class="card" >
+                          
+                          <img src="/media/{{post.post_image}}" class="card-img-top"  alt={{post.post_image}} height="200" />
+            
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <h4 class="card-title">{{post.title}}</h4>
+                                    <p class="card-text ">Category: <span class="text-success">{{post.category.cat_name}}</span></p>
+                                    <p class="card-text">{{post.post_content}}</p>
+                                    {% for tag in post.tags.all %}
+                                       <span class="card-text text-success">#{{tag.tag_name}}</span>
+                                    {% endfor %}
+                                </div>
+                            
+                            </div>
+                            <div class="card-footer">    
+                                <p class="card-text"> Created by: <span class="text-primary">{{ post.author.username}}</span> posted at: <span class="text-primary">{{post.created_at}}</span> last update at: <span class="text-primary">{{post.updated_at}}</span></p>
+
+                                <a href="{% url 'app.home'   %}" class="btn btn-outline-success"> back</a>
+                                {% if user == post.author  or user.is_superuser %}
+                                <a href="{% url 'post.delete' post.id  %}" class="btn btn-outline-danger"> delete</a>
+                                <a href="{% url 'post.update' post.id  %}" class="btn btn-outline-warning"> Update</a>
+                                {% endif %}
+                                <a href="{% url 'post.comment' post.id   %}" class="btn btn-outline-success"> Add comment</a> 
+
+                                <a href="{% url 'post.like' post.id   %}" class="btn btn-outline-primary" >
+                                    <span class="text-primary">{{post.likes_number}}</span>
+                                     like
+                                </a> 
+                                <a href="{% url 'post.unlike' post.id   %}" class="btn btn-outline-danger" >
+                                    <span class="text-danger">{{post.unlikes_number}}</span>
+                                     dislike
+                                </a> 
+
+                                {% if post.post_comments.all %}
+                                <h4 class="mt-1 fs-5 text-secondary">Comments</h4>
+                                {% endif %}
+                                <div class=" ">
+                                    {% for comment in post.post_comments.all %} 
+                                    <div class="border border-primary p-1 my-1">
+                                       <p class="text-secondary fs-6 mb-0">created by: {{ comment.author.username}}  at : {{ comment.created_at }} 
+                                            <a href="{% url 'comment.reply' comment.id   %}" class="btn btn-primary btn-sm"> reply</a>
+                                            {% if user.is_superuser or user == comment.author %}
+                                            <a href="{% url 'comment.update' comment.id   %}" class="btn btn-warning btn-sm"> update</a>
+                                            <a href="{% url 'comment.delete' comment.id   %}" class="btn btn-danger btn-sm"> delete</a>
+                                            {% endif %}
+                                        </p>
+                                       <p class="fs-6 mt-0  ">{{ comment.content }}</p>
+                                       
+                                     </div>
+                                     {% if comment.comment_replies.all %}
+                                       <h4 class="mt-1 fs-5 text-secondary">Replies</h4>
+                                       {% endif %}
+                                       {% for reply in comment.comment_replies.all %} 
+                                       <div class="ms-3 border border-primary p-1 my-1 ">
+                                        <p class="text-secondary fs-6 mb-0">created by: {{ reply.author.username}} |  at : {{ reply.created_at }}
+                                            {% if user.is_superuser or user == reply.author %}
+                                            <a href="{% url 'reply.update' reply.id   %}" class="btn btn-warning btn-sm"> update</a>
+                                            <a href="{% url 'reply.delete' reply.id   %}" class="btn btn-danger btn-sm"> delete</a>
+                                            {% endif %}
+                                        </p>
+                                        <p class="fs-6 mt-0">{{ reply.content }}</p>
+                                       </div>
+                                       
+                                       {% endfor %}  
+                                     
+                                   {% endfor %}  
+                                </div>
+                                                   
+                            </div>
+                        </div>
+            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

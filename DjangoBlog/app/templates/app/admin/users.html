@@ -1,0 +1,52 @@
+{% extends 'app/base.html' %}
+{% block title%}Home {% endblock %}
+{% block maincontent %}
+<div class="container">
+    <div class="row">
+
+        <div class="col-7 mx-auto p-5">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">username</th>
+                        <th scope="col">email</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr {% if user.is_superuser %} class="bg-danger" {% endif %}>
+                        <td> {{user.id}}</td>
+                        <td> {{user.username}}</td>
+                        <td> {{user.email}}</td>
+                        {% if not user.is_superuser %}
+                            {% if user.groups.all %}
+                            {% for group in user.groups.all %}
+                            {% if group.name == 'blocked' %}
+                                <td> <a href="{% url 'admin.unblock.user' user.id %}" class="btn btn-warning"> unblock </a></td>
+                            {% else %}
+                                <td> <a href="{% url 'admin.block.user' user.id %}" class="btn btn-warning"> block </a></td>
+                            {% endif %}
+                            {% endfor %}
+                            {% else %}
+                                <td> <a href="{% url 'admin.block.user' user.id %}" class="btn btn-warning"> block </a></td>
+                            {% endif %}
+                            
+                         
+                            <td> <a href="{% url 'admin.promote.user' user.id %}" class="btn btn-success"> promote  </a></td>
+                        {% else %}
+                        <td></td>
+                        <td></td>
+                        {% endif %}
+        
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

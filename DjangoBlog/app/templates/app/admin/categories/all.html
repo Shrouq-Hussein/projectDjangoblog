@@ -1,0 +1,36 @@
+{% extends 'app/base.html' %}
+{% block title%}categories {% endblock %}
+{% block maincontent %}
+<div class="container">
+    <div class="row">
+
+        <div class="col-7 mx-auto p-5">
+            <a href="{% url 'admin.create.category' %}" class="btn btn-primary"> create </a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">name</th>
+                        <th scope="col">subscribers</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cat in categories %}
+                    <tr >
+                        <td> {{cat.id}}</td>
+                        <td> {{cat.cat_name}}</td>
+                        <td> {{cat.show_subscribers}}</td>
+                        <td> <a href="{% url 'admin.delete.category' cat.id %}" class="btn btn-danger"> delete </a></td>
+                        <td> <a href="{% url 'admin.update.category' cat.id %}" class="btn btn-warning"> update </a></td>
+                
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} create post {% endblock %}
+{% block maincontent %}
+<div class="container pt-5 ps-5">
+    <h1 class="text-primary">Add new post</h1>
+    <div class="row">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+
+            <!-- {% for f in form %}
+            <div class="mb-3">
+                {{f.label}} {{f}}
+                <div class="text-danger">
+                    {{f.errors}}
+                </div>
+            </div>
+            {% endfor %} -->
+            {{form|crispy}}
+
+            <button type="submit" class="btn btn-outline-primary" href="">Submit</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+

@@ -1,0 +1,84 @@
+{% extends 'app/base.html' %}
+{% block title%}Home {% endblock %}
+{% block maincontent %}
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Categories</span> </a>
+                        <ul class="collapse show nav flex-column " id="submenu1" data-bs-parent="#menu">
+                            {% for cat in categories%}
+                            <li class="w-100">
+                               <span class="d-none d-sm-inline">
+                                <a href="{% url 'catPosts' cat.cat_name %}" class="nav-link d-sm-inline px-0">{{cat.cat_name}}</a>
+                                {% if user in cat.subscribers.all %}
+                                    <a class="nav-link d-sm-inline text-danger" href="{% url 'unsubscribetocategory' cat.cat_name %}">unsubscribe</a>
+                                {% else %}
+                                    <a class="nav-link d-sm-inline text-danger" href="{% url 'subscribetocategory' cat.cat_name %}">subscribe</a>
+                                {% endif %}
+                            </span> 
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    
+                </ul>
+                <hr>
+            </div>
+        </div>
+        <div class="col py-3">
+            <div class="container pt-5 ps-5">
+                <div class="row">
+                  
+                    <a href="{% url 'post.create'  %}" class="btn btn-outline-primary col-7 mx-auto"> create new post</a>
+                    {% for p in posts %}
+                    <div class="col-7 mx-auto my-3">
+                        <div class="card" >
+                          
+                            <a href="{% url 'post.details' p.id %}"> <img src="/media/{{p.post_image}}" class="card-img-top"  alt={{p.post_image}} height="200" /></a>
+            
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <h4 class="card-title">{{p.title}}</h4>
+                                    <p class="card-text">{{p.post_content}}</p>
+                                    {% for tag in p.tags.all %}
+                                       <span class="card-text text-success">#{{tag.tag_name}}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="card-footer">    
+                                <p class="card-text"> Created by: <span class="text-primary">{{ p.author.username}}</span> posted at: <span class="text-primary">{{p.created_at}}</span></p>
+
+                                <a href="{% url 'post.comment' p.id   %}" class="btn btn-outline-warning"> Add comment</a>
+                                <a href="{% url 'post.like' p.id   %}" class="btn btn-outline-primary" >
+                                    <span class="text-primary">{{p.likes_number}}</span>
+                                     like
+                                </a> 
+                                <a href="{% url 'post.unlike' p.id   %}" class="btn btn-outline-danger" >
+                                    <span class="text-danger">{{p.unlikes_number}}</span>
+                                     dislike
+                                </a> 
+                                 <!-- {% for u in p.likes.all %}
+                                    {% if u == user%} -->
+                                    
+                                    <!-- {% endif %}
+                                {% endfor %}  -->
+                               
+                                
+                            </div>
+                        </div>
+            
+                    </div>
+                    {% empty %}
+                    <p class="mx-auto"> no posts yet :(</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

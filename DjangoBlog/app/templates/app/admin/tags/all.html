@@ -1,0 +1,34 @@
+{% extends 'app/base.html' %}
+{% block title%}tags {% endblock %}
+{% block maincontent %}
+<div class="container">
+    <div class="row">
+
+        <div class="col-7 mx-auto p-5">
+            <a href="{% url 'admin.create.tag' %}" class="btn btn-primary"> create </a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">name</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tag in tags %}
+                    <tr >
+                        <td> {{tag.id}}</td>
+                        <td> {{tag.tag_name}}</td>
+                        <td> <a href="{% url 'admin.delete.tag' tag.id %}" class="btn btn-danger"> delete </a></td>
+                        <td> <a href="{% url 'admin.update.tag' tag.id %}" class="btn btn-warning"> update </a></td>
+                
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

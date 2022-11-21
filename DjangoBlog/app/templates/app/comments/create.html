@@ -1,0 +1,20 @@
+{% extends 'app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} create comment {% endblock %}
+{% block maincontent %}
+<div class="container pt-5 ps-5">
+    <h1 class="text-primary">Add new comment</h1>
+    <div class="row">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form|crispy}}
+
+            <button type="submit" class="btn btn-outline-primary" href="">add</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+
