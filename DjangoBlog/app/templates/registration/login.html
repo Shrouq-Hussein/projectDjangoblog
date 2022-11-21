@@ -4,6 +4,9 @@
 {% block maincontent %}
 <div class="container">
     <div class="row ">
+        {% for msg in messages %}
+                <p class ='text-danger'>{{msg}}</p>
+        {% endfor %}
         <form method="post" class="col-6 mt-5 mx-auto">
             {% csrf_token %}
             <h2 class="text-primary">Login form</h2>

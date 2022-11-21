@@ -124,6 +124,7 @@ class PostsGenericListView(LoginRequiredMixin,ListView):
         return [template_name]
     def get(self, *args, **kwargs):
         if len(self.request.user.groups.filter(name='blocked')):
+            messages.info(self.request, 'sorry you are blocked contact the admin')
             return redirect("/login")
         return super(PostsGenericListView, self).get(*args, **kwargs)
 
