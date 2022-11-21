@@ -1,4 +1,0 @@
-settings.py
-venv
-**/migrations/**
-db.sqlite3

@@ -122,6 +122,10 @@ class PostsGenericListView(LoginRequiredMixin,ListView):
         else:
             template_name = self.template_name
         return [template_name]
+    def get(self, *args, **kwargs):
+        if len(self.request.user.groups.filter(name='blocked')):
+            return redirect("/login")
+        return super(PostsGenericListView, self).get(*args, **kwargs)
 
 @login_required(login_url='/login')
 def catPosts(request,cat_name):
