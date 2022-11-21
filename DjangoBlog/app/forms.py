@@ -53,6 +53,8 @@ class CategoryModelForm(forms.ModelForm):
         if cat_name :
             if len(cat_name) < 4:
                 self._errors['cat_name'] = self.error_class( ['A minimum of 4 characters is required'])
+            if Category.objects.filter(cat_name=cat_name).first():
+                self._errors['cat_name'] = self.error_class( ['already exists'])
         else:
             self._errors['cat_name'] = self.error_class( ['Category name is required'])
         return self.cleaned_data
@@ -69,6 +71,10 @@ class TagModelForm(forms.ModelForm):
         if tag_name :
             if len(tag_name) < 5:
                 self._errors['tag_name'] = self.error_class( ['A minimum of 5 characters is required'])
+
+            if Tag.objects.filter(tag_name=tag_name).first():
+                self._errors['tag_name'] = self.error_class( ['already exists'])
+
         else:
             self._errors['tag_name'] = self.error_class( ['tag name is required'])
         return self.cleaned_data
@@ -83,7 +89,8 @@ class ForbiddenWordModelForm(forms.ModelForm):
         super(ForbiddenWordModelForm, self).clean()
         word = self.cleaned_data.get('word')
         if word :
-            pass
+            if ForbiddenWord.objects.filter(word=word).first():
+                self._errors['word'] = self.error_class( ['already exists'])
         else:
             self._errors['word'] = self.error_class( ['required'])
         return self.cleaned_data
