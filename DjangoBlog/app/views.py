@@ -653,10 +653,10 @@ def searchby_tag_or_title(request):
             allposts = Post.objects.all()
             for post in allposts:
                 for tag in post.tags.all():
-                    if search_about == tag.tag_name:
+                    if search_about in tag.tag_name:
                         posts.append(post)
         
-                if search_about == post.title:
+                if search_about in post.title:
                     posts.append(post)
             categories = Category.objects.all()
             return render( request, "app/posts/all.html",{"categories":categories,"posts": posts})
